@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:favorite_place/models/place.dart';
+import 'package:favorite_place/providers/places_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NewPlace extends StatefulWidget {
-  const NewPlace(this.addPlace, {super.key});
-
-  final Function(Place) addPlace;
+class NewPlace extends ConsumerStatefulWidget {
+  const NewPlace({super.key});
 
   @override
-  State<NewPlace> createState() {
-    return _NewPlaceState();
-  }
+  ConsumerState<NewPlace> createState() => _NewPlaceState();
 }
 
-class _NewPlaceState extends State<NewPlace> {
-  final _titleController = TextEditingController();
+class _NewPlaceState extends ConsumerState<NewPlace> {
+  final titleController = TextEditingController();
+  @override
+  void dispose() {
+    titleController.dispose();
+    super.dispose();
+  }
 
-  void _showDialog() {
+  void showInvalidInput() {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -33,21 +35,13 @@ class _NewPlaceState extends State<NewPlace> {
     );
   }
 
-  void _submitPlaceData() {
-    if (_titleController.text.trim().isEmpty) {
-      _showDialog();
+  void submitPlaceData() {
+    if (titleController.text.trim().isEmpty) {
+      showInvalidInput();
       return;
     }
-    widget.addPlace(
-      Place(_titleController.text.trim()),
-    );
+    ref.read(placesProvider.notifier).addPlace(titleController.text.trim());
     Navigator.pop(context); // Closes this screen and goes back to the list
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    super.dispose();
   }
 
   @override
@@ -63,7 +57,7 @@ class _NewPlaceState extends State<NewPlace> {
           child: Column(
             children: [
               TextField(
-                controller: _titleController,
+                controller: titleController,
                 maxLength: 50,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface,
@@ -74,7 +68,7 @@ class _NewPlaceState extends State<NewPlace> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: _submitPlaceData,
+                onPressed: submitPlaceData,
                 child: const Text('Save Place'),
               ),
             ],

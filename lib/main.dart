@@ -2,6 +2,7 @@ import 'package:favorite_place/screens/places.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
@@ -25,7 +26,12 @@ final theme = ThemeData.dark().copyWith(
 );
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    // 2. Wrap your entire app in a ProviderScope
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
