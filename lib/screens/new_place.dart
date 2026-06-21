@@ -1,3 +1,4 @@
+import 'package:favorite_place/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 import 'package:favorite_place/providers/places_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,6 +68,8 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
                 ),
               ),
               const SizedBox(height: 16),
+              ImageInput(),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: submitPlaceData,
                 child: const Text('Save Place'),
