@@ -1,4 +1,5 @@
 import 'package:favorite_place/widgets/image_input.dart';
+import 'package:favorite_place/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 import 'package:favorite_place/providers/places_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,6 +77,8 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
                   selectedImage = image;
                 },
               ),
+              const SizedBox(height: 16),
+              LocationInput(),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: submitPlaceData,
