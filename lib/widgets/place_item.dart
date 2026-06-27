@@ -16,11 +16,18 @@ class PlaceItem extends StatelessWidget {
           vertical: 16,
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              place.title,
-              style: Theme.of(context).textTheme.titleLarge,
+            CircleAvatar(
+              radius: 26,
+              backgroundImage: FileImage(place.image),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                place.title,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
           ],
         ),
