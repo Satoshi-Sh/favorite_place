@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:favorite_place/models/place.dart';
+import 'dart:io';
 
 class PlacesNotifier extends Notifier<List<Place>> {
   @override
@@ -7,8 +8,8 @@ class PlacesNotifier extends Notifier<List<Place>> {
     return [];
   }
 
-  void addPlace(String title) {
-    final newPlace = Place(id: DateTime.now().toString(), title: title);
+  void addPlace(String title, File image) {
+    final newPlace = Place(title: title, image: image);
 
     // Direct state mutation using the spread operator
     state = [...state, newPlace];

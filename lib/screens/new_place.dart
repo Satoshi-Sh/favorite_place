@@ -2,16 +2,17 @@ import 'package:favorite_place/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 import 'package:favorite_place/providers/places_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io';
 
 class NewPlace extends ConsumerStatefulWidget {
   const NewPlace({super.key});
-
   @override
   ConsumerState<NewPlace> createState() => _NewPlaceState();
 }
 
 class _NewPlaceState extends ConsumerState<NewPlace> {
   final titleController = TextEditingController();
+  File? selectedImage;
   @override
   void dispose() {
     titleController.dispose();
@@ -37,11 +38,13 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
   }
 
   void submitPlaceData() {
-    if (titleController.text.trim().isEmpty) {
+    if (titleController.text.trim().isEmpty || selectedImage == null) {
       showInvalidInput();
       return;
     }
-    ref.read(placesProvider.notifier).addPlace(titleController.text.trim());
+    ref
+        .read(placesProvider.notifier)
+        .addPlace(titleController.text.trim(), selectedImage!);
     Navigator.pop(context); // Closes this screen and goes back to the list
   }
 
@@ -68,7 +71,11 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
                 ),
               ),
               const SizedBox(height: 16),
-              ImageInput(),
+              ImageInput(
+                onPickImage: (image) {
+                  selectedImage = image;
+                },
+              ),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: submitPlaceData,
