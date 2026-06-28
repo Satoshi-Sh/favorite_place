@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
@@ -25,9 +26,15 @@ final theme = ThemeData.dark().copyWith(
       ),
 );
 
-void main() {
+void main() async {
+  // 2. Ensure Flutter bindings are initialized first
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 3. Load the environment variables from your .env file
+  await dotenv.load(fileName: ".env");
+
+  // 4. Finally, run the app safely
   runApp(
-    // 2. Wrap your entire app in a ProviderScope
     const ProviderScope(
       child: MyApp(),
     ),

@@ -20,6 +20,27 @@ class _LocationInputState extends State<LocationInput> {
   PlaceLocation? pickedLocation;
   var _isGettingLocation = false;
 
+  late final String apiKey;
+
+  @override
+  void initState() {
+    super.initState();
+    final key = dotenv.env['API_KEY'];
+    if (key == null || key.isEmpty) {
+      throw Exception('API Key missing! Check your .env file.');
+    }
+    apiKey = key;
+  }
+
+  String get locationImage {
+    if (pickedLocation == null) {
+      return '';
+    }
+    final lat = pickedLocation!.latitude;
+    final lng = pickedLocation!.longtude;
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=$apiKey';
+  }
+
   void _getCurrentLocation() async {
     Location location = Location();
 
@@ -50,15 +71,11 @@ class _LocationInputState extends State<LocationInput> {
     locationData = await location.getLocation();
     final lat = locationData.latitude;
     final lng = locationData.longitude;
-    final apiKey = dotenv.env['API_KEY'];
 
     if (lat == null || lng == null) {
       return;
     }
 
-    if (apiKey == null) {
-      throw Exception('API Key missing! Check your .env file.');
-    }
     final url = Uri.parse(
       'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey',
     );
@@ -86,6 +103,16 @@ class _LocationInputState extends State<LocationInput> {
         color: Theme.of(context).colorScheme.onSurface,
       ),
     );
+
+    if (pickedLocation != null) {
+      previewContent = Image.network(
+        locationImage,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+      );
+    }
+
     if (_isGettingLocation) {
       previewContent = const CircularProgressIndicator();
     }
