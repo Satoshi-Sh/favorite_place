@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:favorite_place/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +17,7 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
-  Location? pickedLocation;
+  PlaceLocation? pickedLocation;
   var _isGettingLocation = false;
 
   void _getCurrentLocation() async {
@@ -51,6 +52,10 @@ class _LocationInputState extends State<LocationInput> {
     final lng = locationData.longitude;
     final apiKey = dotenv.env['API_KEY'];
 
+    if (lat == null || lng == null) {
+      return;
+    }
+
     if (apiKey == null) {
       throw Exception('API Key missing! Check your .env file.');
     }
@@ -63,11 +68,13 @@ class _LocationInputState extends State<LocationInput> {
     final address = resData['results'][0]['formatted_address'];
 
     setState(() {
+      pickedLocation = PlaceLocation(
+        latitude: lat,
+        longtude: lng,
+        address: address,
+      );
       _isGettingLocation = false;
     });
-
-    print(locationData.latitude);
-    print(locationData.longitude);
   }
 
   @override
